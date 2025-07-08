@@ -21,4 +21,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "SpendLess"
 include(":app")
- 
+include(":auth:data")
+include(":auth:domain")
+include(":auth:presentation")
+include(":core:data")
+include(":core:domain")
+include(":core:presentation:designsystem")
+include(":core:presentation:ui")
