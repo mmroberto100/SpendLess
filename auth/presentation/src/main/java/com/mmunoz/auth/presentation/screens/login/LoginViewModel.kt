@@ -1,0 +1,105 @@
+package com.mmunoz.auth.presentation.screens.login
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mmunoz.auth.domain.UserDataValidator
+import com.mmunoz.auth.presentation.screens.login.handling.LoginAction
+import com.mmunoz.auth.presentation.screens.login.handling.LoginUiEvent
+import com.mmunoz.auth.presentation.screens.login.handling.LoginUiEvent.*
+import com.mmunoz.auth.presentation.screens.login.handling.LoginUiState
+import com.mmunoz.core.domain.repository.SessionRepository
+import com.mmunoz.core.domain.repository.UserRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+
+class LoginViewModel(
+    private val userDataValidator: UserDataValidator,
+    private val userRepository: UserRepository,
+    private val sessionRepository: SessionRepository
+) : ViewModel() {
+
+    var state by mutableStateOf(LoginUiState())
+        private set
+
+    private val _actions = Channel<LoginAction>()
+    val actions = _actions.receiveAsFlow()
+
+    init {
+        checkUserAuthentication()
+    }
+
+    private fun checkUserAuthentication() {
+        viewModelScope.launch {
+            val username = sessionRepository.getLoggedInUsername()
+
+            if (username != null) {
+                if (sessionRepository.isSessionExpired()) {
+                    _actions.send(LoginAction.NavigateToPinPrompt)
+                } else {
+                    _actions.send(LoginAction.NavigateToTransactions)
+                }
+            } else {
+                sendAction(LoginAction.RequestFocus)
+            }
+        }
+    }
+
+    fun onEvent(event: LoginUiEvent) {
+        when (event) {
+            is UsernameTextChanged -> updateUsername(username = event.username)
+            is PinTextChanged -> updatePin(pin = event.pin)
+
+            LogInButtonClicked -> validateUser()
+            RegistrationButtonClicked -> sendAction(
+                LoginAction.NavigateToRegistration
+            )
+        }
+    }
+
+    private fun validateUser() {
+        state = state.copy(
+            userValidationState = userDataValidator.validateUserData(
+                username = state.username,
+                pin = state.pin
+            )
+        )
+
+        if (state.userValidationState.isValidUser) {
+            viewModelScope.launch {
+                val user = userRepository.getUser(username = state.username)
+
+                if (user != null) {
+                    if (state.pin == user.pin) {
+                        sessionRepository.logIn(state.username)
+                        sendAction(LoginAction.NavigateToTransactions)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun sendAction(action: LoginAction) {
+        viewModelScope.launch { _actions.send(action) }
+    }
+
+    private fun updateUsername(username: String) {
+        state = state.copy(username = username)
+    }
+
+    private fun showError(){
+        viewModelScope.launch {
+            state = state.copy(showError = true)
+            delay(2000)
+            state = state.copy(showError = false)
+        }
+    }
+
+    private fun updatePin(pin: String){
+        state = state.copy(pin = pin)
+    }
+}

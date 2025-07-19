@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_new_transaction">Create new transaction</string>
+    <string name="go_back">Go back</string>
+    <string name="_10">-$10</string>
+    <string name="parentheses_10">($10)</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="expenses_format">Expenses format</string>
+    <string name="decimal_separator">Decimal separator</string>
+    <string name="currency">Currency</string>
+    <string name="thousands_separator">Thousands separator</string>
+    <string name="us_dollar_usd">US Dollar (USD)</string>
+    <string name="euro_eur">Euro (EUR)</string>
+    <string name="british_pound_sterling_gbp">British Pound Sterling (GBP)</string>
+    <string name="japanese_currency">Japanese Yen (JPY)</string>
+    <string name="chinese_currency">Chinese Yuan Renminbi (CNY)</string>
+    <string name="indian_currency">Indian Rupee (INR)</string>
+    <string name="south_african_currency">South African Rand (ZAR)</string>
+    <string name="canadian_currency">Canadian Dollar (CAD)</string>
+    <string name="australian_currency">Australian Dollar (AUD)</string>
+    <string name="swiss_currency">Swiss Franc (CHF)</string>
+</resources>
