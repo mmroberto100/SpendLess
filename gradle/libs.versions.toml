@@ -22,6 +22,7 @@ kotlinx-serialization = "1.7.3"
 navigation-compose = "2.8.8"
 timber = "5.0.1"
 
+
 # Project versions
 projectApplicationId = "com.mmunoz.spendless"
 projectVersionName = "1.0"
@@ -51,6 +52,11 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityCryptoKtx" }
 androidx-material-icons-extended = {  group = "androidx.compose.material", name = "material-icons-extended", version.ref = "icons-extended" }
+
+# Room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 
